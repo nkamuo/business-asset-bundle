@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services
+                               https://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <!-- Default service configuration -->
+        <defaults autowire="true" autoconfigure="true" public="false" />
+
+        <!-- Repository Services -->
+        <service id="Nkamuo\AssetBundle\Domain\Repository\AssetRepositoryInterface"
+                 alias="Nkamuo\AssetBundle\Infrastructure\Repository\DoctrineAssetRepository" />
+
+        <service id="Nkamuo\AssetBundle\Infrastructure\Repository\DoctrineAssetRepository"
+                 class="Nkamuo\AssetBundle\Infrastructure\Repository\DoctrineAssetRepository" />
+
+        <!-- Command Handlers -->
+        <service id="Nkamuo\AssetBundle\Application\CommandHandler\CreateAssetCommandHandler"
+                 class="Nkamuo\AssetBundle\Application\CommandHandler\CreateAssetCommandHandler">
+            <tag name="messenger.message_handler" />
+        </service>
+
+        <!-- Domain Services -->
+        <service id="Nkamuo\AssetBundle\Domain\Service\AssetBillingService"
+                 class="Nkamuo\AssetBundle\Domain\Service\AssetBillingService" />
+
+        <!-- Application Services -->
+        <service id="Nkamuo\AssetBundle\Application\Service\AssetManagementService"
+                 class="Nkamuo\AssetBundle\Application\Service\AssetManagementService" />
+
+    </services>
+</container>
