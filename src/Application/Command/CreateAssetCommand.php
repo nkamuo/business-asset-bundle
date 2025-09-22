@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Nkamuo\AssetBundle\Application\Command;
 
+use Money\Money;
 use Nkamuo\AssetBundle\Domain\ValueObject\AssetCategory;
 use Nkamuo\AssetBundle\Domain\ValueObject\AssetStatus;
 use Nkamuo\AssetBundle\Domain\ValueObject\AssetType;
-use Money\Money;
 use Symfony\Component\Uid\Ulid;
 
 /**
- * Command to create a new asset
+ * Command to create a new asset.
  */
 final readonly class CreateAssetCommand
 {

@@ -13,17 +13,17 @@ use Nkamuo\AssetBundle\Domain\Entity\AssetBillingEvent;
 use Nkamuo\AssetBundle\Domain\Entity\AssetProvision;
 use Nkamuo\AssetBundle\Domain\Entity\AssetRateCard;
 use Nkamuo\AssetBundle\Domain\Entity\AssetUsageEvent;
-use Nkamuo\AssetBundle\Domain\Repository\AssetRepositoryInterface;
-use Nkamuo\AssetBundle\Domain\Repository\AssetProvisionRepositoryInterface;
 use Nkamuo\AssetBundle\Domain\Repository\AssetBillingEventRepositoryInterface;
+use Nkamuo\AssetBundle\Domain\Repository\AssetProvisionRepositoryInterface;
+use Nkamuo\AssetBundle\Domain\Repository\AssetRepositoryInterface;
 use Nkamuo\AssetBundle\Domain\Service\AssetBillingService;
 use Nkamuo\AssetBundle\Domain\ValueObject\AssetStatus;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Uid\Ulid;
 
 /**
- * Application service for asset management operations
- * 
+ * Application service for asset management operations.
+ *
  * Orchestrates asset management workflows including creation,
  * provisioning, usage tracking, and billing calculations.
  */
@@ -39,35 +39,35 @@ final readonly class AssetManagementService
     }
 
     /**
-     * Create a new asset
+     * Create a new asset.
      */
     public function createAsset(CreateAssetCommand $command): Asset
     {
         $this->commandBus->dispatch($command);
-        
+
         // Return the created asset
         return $this->assetRepository->findByAssetNumber($command->assetNumber);
     }
 
     /**
-     * Create a new asset provision
+     * Create a new asset provision.
      */
     public function createAssetProvision(CreateAssetProvisionCommand $command): AssetProvision
     {
         $this->commandBus->dispatch($command);
-        
+
         // Find and return the created provision
         $provisions = $this->provisionRepository->findByAsset($command->assetId);
         return end($provisions); // Return the most recently created provision
     }
 
     /**
-     * Create a new asset rate card
+     * Create a new asset rate card.
      */
     public function createAssetRateCard(CreateAssetRateCardCommand $command): AssetRateCard
     {
         $provision = $this->provisionRepository->findById($command->provisionId);
-        
+
         if (!$provision) {
             throw new \InvalidArgumentException('Provision not found');
         }
@@ -88,17 +88,17 @@ final readonly class AssetManagementService
 
         // Note: This would typically use a repository to save
         // For this example, we're showing the creation logic
-        
+
         return $rateCard;
     }
 
     /**
-     * Record asset usage event
+     * Record asset usage event.
      */
     public function recordAssetUsage(RecordAssetUsageCommand $command): AssetUsageEvent
     {
         $this->commandBus->dispatch($command);
-        
+
         $asset = $this->assetRepository->findById($command->assetId);
         if (!$asset) {
             throw new \InvalidArgumentException('Asset not found');
@@ -126,8 +126,8 @@ final readonly class AssetManagementService
     }
 
     /**
-     * Calculate billing for an asset in a specific period
-     * 
+     * Calculate billing for an asset in a specific period.
+     *
      * @return AssetBillingEvent[]
      */
     public function calculateAssetBilling(
@@ -136,7 +136,7 @@ final readonly class AssetManagementService
         \DateTimeImmutable $endDate
     ): array {
         $asset = $this->assetRepository->findById($assetId);
-        
+
         if (!$asset) {
             throw new \InvalidArgumentException('Asset not found');
         }
@@ -145,8 +145,8 @@ final readonly class AssetManagementService
     }
 
     /**
-     * Calculate billing for all assets for a specific period
-     * 
+     * Calculate billing for all assets for a specific period.
+     *
      * @return AssetBillingEvent[]
      */
     public function calculateBillingForAllAssets(
@@ -165,13 +165,13 @@ final readonly class AssetManagementService
     }
 
     /**
-     * Approve billing events
+     * Approve billing events.
      */
     public function approveBillingEvents(array $billingEventIds): void
     {
         foreach ($billingEventIds as $id) {
             $billingEvent = $this->billingEventRepository->findById(Ulid::fromString($id));
-            
+
             if ($billingEvent) {
                 $billingEvent->approve();
                 $this->billingEventRepository->save($billingEvent);
@@ -180,7 +180,7 @@ final readonly class AssetManagementService
     }
 
     /**
-     * Process billing events for settlement
+     * Process billing events for settlement.
      */
     public function processBillingForSettlement(
         array $billingEventIds,
@@ -188,7 +188,7 @@ final readonly class AssetManagementService
     ): void {
         foreach ($billingEventIds as $id) {
             $billingEvent = $this->billingEventRepository->findById(Ulid::fromString($id));
-            
+
             if ($billingEvent && $billingEvent->getStatus()->canBeSettled()) {
                 $billingEvent->bill($settlementId);
                 $this->billingEventRepository->save($billingEvent);
@@ -197,7 +197,7 @@ final readonly class AssetManagementService
     }
 
     /**
-     * Get asset utilization statistics
+     * Get asset utilization statistics.
      */
     public function getAssetUtilizationStats(
         Ulid $assetId,
@@ -205,17 +205,17 @@ final readonly class AssetManagementService
         \DateTimeImmutable $endDate
     ): array {
         $asset = $this->assetRepository->findById($assetId);
-        
+
         if (!$asset) {
             throw new \InvalidArgumentException('Asset not found');
         }
 
         // Calculate total period hours
         $totalPeriodHours = $startDate->diff($endDate)->days * 24;
-        
+
         // Get usage events for the period
         $usageEvents = []; // In real implementation, get from usage event repository
-        
+
         $productiveHours = 0;
         $idleHours = 0;
         $maintenanceHours = 0;
@@ -224,7 +224,7 @@ final readonly class AssetManagementService
         foreach ($usageEvents as $event) {
             $eventHours = $event->getDurationInHours() ?? 0;
             $totalUsageHours += $eventHours;
-            
+
             if ($event->getUsageType()->isProductive()) {
                 $productiveHours += $eventHours;
             } elseif ($event->getUsageType()->isDowntime()) {
@@ -255,7 +255,7 @@ final readonly class AssetManagementService
     }
 
     /**
-     * Get billing summary for an asset
+     * Get billing summary for an asset.
      */
     public function getAssetBillingSummary(
         Ulid $assetId,
@@ -277,10 +277,10 @@ final readonly class AssetManagementService
         foreach ($billingEvents as $event) {
             $amount = $event->getCalculatedAmount()->getAmount();
             $totalAmount += $amount;
-            
+
             $status = $event->getStatus()->value;
             $statusCounts[$status] = ($statusCounts[$status] ?? 0) + 1;
-            
+
             switch ($event->getStatus()) {
                 case \Nkamuo\AssetBundle\Domain\ValueObject\BillingEventStatus::APPROVED:
                     $approvedAmount += $amount;
@@ -308,18 +308,18 @@ final readonly class AssetManagementService
     }
 
     /**
-     * Validate asset configuration
+     * Validate asset configuration.
      */
     public function validateAssetConfiguration(Ulid $assetId): array
     {
         $asset = $this->assetRepository->findById($assetId);
-        
+
         if (!$asset) {
             throw new \InvalidArgumentException('Asset not found');
         }
 
         $issues = [];
-        
+
         // Check if asset has active provision
         $activeProvision = $asset->getActiveProvision();
         if (!$activeProvision) {
@@ -331,12 +331,12 @@ final readonly class AssetManagementService
                 $issues[] = 'Active provision has no rate cards';
             }
         }
-        
+
         // Check asset status
         if (!$asset->getStatus()->isOperational()) {
             $issues[] = sprintf('Asset status "%s" is not operational', $asset->getStatus()->value);
         }
-        
+
         // Check required identifiers based on asset type
         $requiredIdentifiers = $this->getRequiredIdentifiersForAssetType($asset->getType());
         foreach ($requiredIdentifiers as $identifier) {

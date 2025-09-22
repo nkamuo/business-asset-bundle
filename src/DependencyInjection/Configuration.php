@@ -8,7 +8,7 @@ use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 /**
- * Bundle configuration definition
+ * Bundle configuration definition.
  */
 class Configuration implements ConfigurationInterface
 {

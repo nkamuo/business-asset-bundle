@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Nkamuo\AssetBundle\Domain\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Money\Money;
 use Nkamuo\AssetBundle\Domain\ValueObject\RateType;
 use Symfony\Component\Uid\Ulid;
-use Money\Money;
 
 /**
- * Asset Rate Card entity defining billing rates for asset provisions
- * 
+ * Asset Rate Card entity defining billing rates for asset provisions.
+ *
  * Provides flexible rate structures supporting various billing models
  * including fixed rates, usage-based rates, and complex tiered pricing.
  */
@@ -33,8 +33,8 @@ class AssetRateCard
     #[ORM\Column(type: 'string', enumType: RateType::class)]
     private RateType $rateType;
 
-    #[ORM\Column(type: 'integer')]
-    private int $rateAmount; // Money amount in cents
+    #[ORM\Column(type: 'string')]
+    private string $rateAmount; // Money amount in cents
 
     #[ORM\Column(type: 'string', length: 3)]
     private string $rateCurrency; // Currency code
@@ -42,14 +42,14 @@ class AssetRateCard
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
     private ?string $unitOfMeasure = null; // 'mile', 'hour', 'day', 'trip', etc.
 
-    #[ORM\Column(type: 'integer', nullable: true)]
-    private ?int $minimumChargeAmount = null; // Minimum charge in cents
+    #[ORM\Column(type: 'string', nullable: true)]
+    private ?string $minimumChargeAmount = null; // Minimum charge in cents
 
     #[ORM\Column(type: 'string', length: 3, nullable: true)]
     private ?string $minimumChargeCurrency = null;
 
-    #[ORM\Column(type: 'integer', nullable: true)]
-    private ?int $maximumChargeAmount = null; // Maximum charge in cents
+    #[ORM\Column(type: 'string', nullable: true)]
+    private ?string $maximumChargeAmount = null; // Maximum charge in cents
 
     #[ORM\Column(type: 'string', length: 3, nullable: true)]
     private ?string $maximumChargeCurrency = null;
@@ -309,7 +309,7 @@ class AssetRateCard
     {
         foreach ($this->conditions as $key => $expectedValue) {
             $actualValue = $context[$key] ?? null;
-            
+
             if ($actualValue !== $expectedValue) {
                 return false;
             }
@@ -318,7 +318,7 @@ class AssetRateCard
         return true;
     }
 
-    public function calculateAmount(float $quantity, array $context = []): Money
+    public function calculateAmount(int $quantity, array $context = []): Money
     {
         if (!$this->meetsConditions($context)) {
             return new Money(0, new \Money\Currency($this->rateCurrency));
@@ -326,8 +326,7 @@ class AssetRateCard
 
         $amount = match($this->rateType) {
             RateType::FIXED_DAILY, RateType::FIXED_MONTHLY => $this->getRate(),
-            RateType::PER_MILE, RateType::PER_HOUR, RateType::PER_TRIP => 
-                $this->getRate()->multiply($quantity),
+            RateType::PER_MILE, RateType::PER_HOUR, RateType::PER_TRIP => $this->getRate()->multiply($quantity),
             RateType::PERCENTAGE_REVENUE => $this->calculatePercentageAmount($quantity),
             RateType::TIERED => $this->calculateTieredAmount($quantity),
             default => new Money(0, new \Money\Currency($this->rateCurrency))
@@ -340,7 +339,7 @@ class AssetRateCard
     {
         $percentage = $this->getRate()->getAmount() / 10000; // Rate stored as basis points
         $calculatedAmount = (int) round($revenueAmount * $percentage);
-        
+
         return new Money($calculatedAmount, new \Money\Currency($this->rateCurrency));
     }
 
@@ -352,12 +351,12 @@ class AssetRateCard
         foreach ($this->tierStructure as $tier) {
             $tierLimit = $tier['limit'] ?? PHP_FLOAT_MAX;
             $tierRate = $tier['rate'] ?? 0;
-            
+
             $tierQuantity = min($remainingQuantity, $tierLimit);
             $totalAmount += $tierQuantity * $tierRate;
-            
+
             $remainingQuantity -= $tierQuantity;
-            
+
             if ($remainingQuantity <= 0) {
                 break;
             }

@@ -9,7 +9,7 @@ use Nkamuo\AssetBundle\Domain\ValueObject\UsageType;
 use Symfony\Component\Uid\Ulid;
 
 /**
- * Repository interface for AssetUsageEvent entities
+ * Repository interface for AssetUsageEvent entities.
  */
 interface AssetUsageEventRepositoryInterface
 {
@@ -59,8 +59,8 @@ interface AssetUsageEventRepositoryInterface
     public function findAll(): array;
 
     /**
-     * Find usage events with filters
-     * 
+     * Find usage events with filters.
+     *
      * @return AssetUsageEvent[]
      */
     public function findWithFilters(
@@ -78,7 +78,7 @@ interface AssetUsageEventRepositoryInterface
     ): array;
 
     /**
-     * Get usage statistics for an asset in a period
+     * Get usage statistics for an asset in a period.
      */
     public function getUsageStatistics(
         Ulid $assetId,
@@ -87,7 +87,7 @@ interface AssetUsageEventRepositoryInterface
     ): array;
 
     /**
-     * Calculate total usage by type for an asset in a period
+     * Calculate total usage by type for an asset in a period.
      */
     public function calculateUsageByType(
         Ulid $assetId,

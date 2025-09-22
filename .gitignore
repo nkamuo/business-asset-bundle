@@ -1,1 +1,49 @@
+# Dependencies
 /vendor/
+/node_modules/
+
+# Environment & Configuration
+/.env
+/.env.local
+/.env.*.local
+/config/secrets/prod/prod.decrypt.private.php
+
+# Cache & Logs
+/var/
+/build/
+*.log
+
+# IDE & Editor
+/.idea/
+/.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Testing
+/phpunit.xml
+/.phpunit.result.cache
+/coverage/
+/tests/_output/
+
+# Code Quality
+/.php-cs-fixer.cache
+/.phpstan.cache
+/psalm.xml.cache
+
+# Build artifacts
+/dist/
+/build/
+*.phar
+
+# Composer
+/composer.phar
+composer.lock
+
+# Temporary files
+*.tmp
+*.temp

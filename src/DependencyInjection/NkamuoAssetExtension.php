@@ -10,7 +10,7 @@ use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
- * Bundle extension for dependency injection configuration
+ * Bundle extension for dependency injection configuration.
  */
 class NkamuoAssetExtension extends Extension
 {

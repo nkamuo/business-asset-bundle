@@ -10,7 +10,7 @@ use Nkamuo\AssetBundle\Domain\Repository\AssetRepositoryInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 /**
- * Handler for CreateAssetCommand
+ * Handler for CreateAssetCommand.
  */
 #[AsMessageHandler]
 final readonly class CreateAssetCommandHandler

@@ -7,15 +7,15 @@ namespace Nkamuo\AssetBundle\Domain\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Money\Money;
 use Nkamuo\AssetBundle\Domain\ValueObject\AssetCategory;
 use Nkamuo\AssetBundle\Domain\ValueObject\AssetStatus;
 use Nkamuo\AssetBundle\Domain\ValueObject\AssetType;
 use Symfony\Component\Uid\Ulid;
-use Money\Money;
 
 /**
- * Core Asset entity representing any manageable resource
- * 
+ * Core Asset entity representing any manageable resource.
+ *
  * Supports various asset types: vehicles, human resources, equipment,
  * infrastructure, and technology assets with flexible specifications
  * and comprehensive tracking capabilities.
@@ -282,13 +282,13 @@ class Asset
     public function getActiveProvision(\DateTimeImmutable $at = null): ?AssetProvision
     {
         $at = $at ?? new \DateTimeImmutable();
-        
+
         foreach ($this->provisions as $provision) {
             if ($provision->isActiveAt($at)) {
                 return $provision;
             }
         }
-        
+
         return null;
     }
 }

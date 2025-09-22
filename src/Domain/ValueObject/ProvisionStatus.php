@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Nkamuo\AssetBundle\Domain\ValueObject;
 
 /**
- * Provision Status enumeration
- * 
+ * Provision Status enumeration.
+ *
  * Represents the current status of an asset provision agreement,
  * controlling billing activation and asset availability.
  */
@@ -52,7 +52,7 @@ enum ProvisionStatus: string
     }
 
     /**
-     * Check if billing should be generated for this status
+     * Check if billing should be generated for this status.
      */
     public function generatesBilling(): bool
     {
@@ -63,7 +63,7 @@ enum ProvisionStatus: string
     }
 
     /**
-     * Check if asset is available for use in this status
+     * Check if asset is available for use in this status.
      */
     public function allowsAssetUsage(): bool
     {
@@ -74,7 +74,7 @@ enum ProvisionStatus: string
     }
 
     /**
-     * Check if provision can be modified in this status
+     * Check if provision can be modified in this status.
      */
     public function allowsModification(): bool
     {
@@ -85,7 +85,7 @@ enum ProvisionStatus: string
     }
 
     /**
-     * Get valid status transitions from current status
+     * Get valid status transitions from current status.
      */
     public function getValidTransitions(): array
     {
@@ -99,7 +99,7 @@ enum ProvisionStatus: string
     }
 
     /**
-     * Check if transition to another status is valid
+     * Check if transition to another status is valid.
      */
     public function canTransitionTo(ProvisionStatus $newStatus): bool
     {
@@ -107,7 +107,7 @@ enum ProvisionStatus: string
     }
 
     /**
-     * Get statuses that are considered active (not final)
+     * Get statuses that are considered active (not final).
      */
     public static function getActiveStatuses(): array
     {
@@ -119,7 +119,7 @@ enum ProvisionStatus: string
     }
 
     /**
-     * Get statuses that are considered final (cannot be changed)
+     * Get statuses that are considered final (cannot be changed).
      */
     public static function getFinalStatuses(): array
     {
@@ -130,7 +130,7 @@ enum ProvisionStatus: string
     }
 
     /**
-     * Get statuses that indicate the provision is operational
+     * Get statuses that indicate the provision is operational.
      */
     public static function getOperationalStatuses(): array
     {
@@ -140,7 +140,7 @@ enum ProvisionStatus: string
     }
 
     /**
-     * Check if this is an active status
+     * Check if this is an active status.
      */
     public function isActive(): bool
     {
@@ -148,7 +148,7 @@ enum ProvisionStatus: string
     }
 
     /**
-     * Check if this is a final status
+     * Check if this is a final status.
      */
     public function isFinal(): bool
     {
@@ -156,7 +156,7 @@ enum ProvisionStatus: string
     }
 
     /**
-     * Check if this is an operational status
+     * Check if this is an operational status.
      */
     public function isOperational(): bool
     {
@@ -164,7 +164,7 @@ enum ProvisionStatus: string
     }
 
     /**
-     * Get the reason code for non-active statuses
+     * Get the reason code for non-active statuses.
      */
     public function getReasonCode(): ?string
     {
@@ -178,7 +178,7 @@ enum ProvisionStatus: string
     }
 
     /**
-     * Check if billing reconciliation is needed when transitioning to this status
+     * Check if billing reconciliation is needed when transitioning to this status.
      */
     public function requiresBillingReconciliation(): bool
     {
@@ -189,7 +189,7 @@ enum ProvisionStatus: string
     }
 
     /**
-     * Get recommended next actions for this status
+     * Get recommended next actions for this status.
      */
     public function getRecommendedActions(): array
     {

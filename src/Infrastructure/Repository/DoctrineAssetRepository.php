@@ -13,7 +13,7 @@ use Nkamuo\AssetBundle\Domain\ValueObject\AssetType;
 use Symfony\Component\Uid\Ulid;
 
 /**
- * Doctrine repository implementation for Asset entities
+ * Doctrine repository implementation for Asset entities.
  */
 class DoctrineAssetRepository extends ServiceEntityRepository implements AssetRepositoryInterface
 {

@@ -4,16 +4,14 @@ declare(strict_types=1);
 
 namespace Nkamuo\AssetBundle\Domain\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Money\Money;
 use Nkamuo\AssetBundle\Domain\ValueObject\BillingEventStatus;
 use Symfony\Component\Uid\Ulid;
-use Money\Money;
 
 /**
- * Asset Billing Event entity representing calculated charges
- * 
+ * Asset Billing Event entity representing calculated charges.
+ *
  * Contains the calculated billing amounts for asset usage
  * based on rate cards and usage events, ready for settlement.
  */
@@ -322,7 +320,7 @@ class AssetBillingEvent
     {
         return in_array($this->status, [
             BillingEventStatus::CALCULATED,
-            BillingEventStatus::DISPUTED
+            BillingEventStatus::DISPUTED,
         ], true);
     }
 
@@ -330,7 +328,7 @@ class AssetBillingEvent
     {
         $rateType = $this->rateCard->getRateType();
         $amount = $this->getCalculatedAmount();
-        
+
         $summary = sprintf(
             '%s: %s',
             $rateType->getDisplayName(),

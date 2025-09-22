@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Nkamuo\AssetBundle\Domain\ValueObject;
 
 /**
- * Provision Type enumeration
- * 
+ * Provision Type enumeration.
+ *
  * Defines the different types of asset provisioning arrangements
  * between partners, each with different financial and operational implications.
  */
@@ -47,7 +47,7 @@ enum ProvisionType: string
     }
 
     /**
-     * Check if this provision type typically involves recurring payments
+     * Check if this provision type typically involves recurring payments.
      */
     public function hasRecurringPayments(): bool
     {
@@ -58,7 +58,7 @@ enum ProvisionType: string
     }
 
     /**
-     * Check if this provision type allows for usage-based billing
+     * Check if this provision type allows for usage-based billing.
      */
     public function allowsUsageBasedBilling(): bool
     {
@@ -69,31 +69,31 @@ enum ProvisionType: string
     }
 
     /**
-     * Check if this provision type requires external provider
+     * Check if this provision type requires external provider.
      */
     public function requiresExternalProvider(): bool
     {
         return match($this) {
-            self::LEASED, self::RENTED, self::SUBCONTRACTED, self::SHARED, 
+            self::LEASED, self::RENTED, self::SUBCONTRACTED, self::SHARED,
             self::BORROWED, self::CONSIGNMENT => true,
             self::OWNED => false,
         };
     }
 
     /**
-     * Check if this provision type implies operational responsibility transfer
+     * Check if this provision type implies operational responsibility transfer.
      */
     public function transfersOperationalResponsibility(): bool
     {
         return match($this) {
             self::SUBCONTRACTED => true,
-            self::OWNED, self::LEASED, self::RENTED, self::SHARED, 
+            self::OWNED, self::LEASED, self::RENTED, self::SHARED,
             self::BORROWED, self::CONSIGNMENT => false,
         };
     }
 
     /**
-     * Get typical contract duration for this provision type
+     * Get typical contract duration for this provision type.
      */
     public function getTypicalDuration(): string
     {
@@ -109,7 +109,7 @@ enum ProvisionType: string
     }
 
     /**
-     * Get provision types that are typically internal (no external party)
+     * Get provision types that are typically internal (no external party).
      */
     public static function getInternalTypes(): array
     {
@@ -117,7 +117,7 @@ enum ProvisionType: string
     }
 
     /**
-     * Get provision types that involve external parties
+     * Get provision types that involve external parties.
      */
     public static function getExternalTypes(): array
     {
@@ -132,7 +132,7 @@ enum ProvisionType: string
     }
 
     /**
-     * Get provision types that typically involve fixed rates
+     * Get provision types that typically involve fixed rates.
      */
     public static function getFixedRateTypes(): array
     {
@@ -143,7 +143,7 @@ enum ProvisionType: string
     }
 
     /**
-     * Get provision types that typically involve variable rates
+     * Get provision types that typically involve variable rates.
      */
     public static function getVariableRateTypes(): array
     {
@@ -156,7 +156,7 @@ enum ProvisionType: string
     }
 
     /**
-     * Check if this is an internal provision type
+     * Check if this is an internal provision type.
      */
     public function isInternal(): bool
     {
@@ -164,7 +164,7 @@ enum ProvisionType: string
     }
 
     /**
-     * Check if this is an external provision type
+     * Check if this is an external provision type.
      */
     public function isExternal(): bool
     {
@@ -172,7 +172,7 @@ enum ProvisionType: string
     }
 
     /**
-     * Get recommended billing frequency for this provision type
+     * Get recommended billing frequency for this provision type.
      */
     public function getRecommendedBillingFrequency(): string
     {

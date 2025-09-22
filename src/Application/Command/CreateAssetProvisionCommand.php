@@ -9,7 +9,7 @@ use Nkamuo\AssetBundle\Domain\ValueObject\ProvisionType;
 use Symfony\Component\Uid\Ulid;
 
 /**
- * Command to create a new asset provision
+ * Command to create a new asset provision.
  */
 final readonly class CreateAssetProvisionCommand
 {

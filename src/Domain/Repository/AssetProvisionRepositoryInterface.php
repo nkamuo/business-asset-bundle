@@ -10,7 +10,7 @@ use Nkamuo\AssetBundle\Domain\ValueObject\ProvisionType;
 use Symfony\Component\Uid\Ulid;
 
 /**
- * Repository interface for AssetProvision entities
+ * Repository interface for AssetProvision entities.
  */
 interface AssetProvisionRepositoryInterface
 {
@@ -63,8 +63,8 @@ interface AssetProvisionRepositoryInterface
     public function findAll(): array;
 
     /**
-     * Find provisions with filters
-     * 
+     * Find provisions with filters.
+     *
      * @return AssetProvision[]
      */
     public function findWithFilters(
@@ -80,7 +80,7 @@ interface AssetProvisionRepositoryInterface
     ): array;
 
     /**
-     * Count provisions with filters
+     * Count provisions with filters.
      */
     public function countWithFilters(
         ?Ulid $assetId = null,

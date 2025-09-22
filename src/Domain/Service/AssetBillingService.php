@@ -4,18 +4,17 @@ declare(strict_types=1);
 
 namespace Nkamuo\AssetBundle\Domain\Service;
 
+use Money\Money;
 use Nkamuo\AssetBundle\Domain\Entity\Asset;
 use Nkamuo\AssetBundle\Domain\Entity\AssetBillingEvent;
-use Nkamuo\AssetBundle\Domain\Entity\AssetProvision;
 use Nkamuo\AssetBundle\Domain\Entity\AssetRateCard;
 use Nkamuo\AssetBundle\Domain\Entity\AssetUsageEvent;
 use Nkamuo\AssetBundle\Domain\Repository\AssetUsageEventRepositoryInterface;
 use Nkamuo\AssetBundle\Domain\ValueObject\RateType;
-use Money\Money;
 
 /**
- * Domain service for asset billing calculations
- * 
+ * Domain service for asset billing calculations.
+ *
  * Handles complex billing logic including rate calculations,
  * usage aggregation, and billing event generation.
  */
@@ -27,8 +26,8 @@ final readonly class AssetBillingService
     }
 
     /**
-     * Calculate asset charges for a billing period
-     * 
+     * Calculate asset charges for a billing period.
+     *
      * @return AssetBillingEvent[]
      */
     public function calculateAssetCharges(
@@ -37,7 +36,7 @@ final readonly class AssetBillingService
         \DateTimeImmutable $endDate
     ): array {
         $provision = $asset->getActiveProvision($startDate);
-        
+
         if (!$provision) {
             return [];
         }
@@ -53,10 +52,10 @@ final readonly class AssetBillingService
 
         foreach ($rateCards as $rateCard) {
             $amount = $this->calculateRateAmount($rateCard, $usageEvents, $startDate, $endDate);
-            
+
             if ($amount->getAmount() > 0) {
                 $usageEventIds = array_map(
-                    fn(AssetUsageEvent $event) => (string) $event->getId(),
+                    fn (AssetUsageEvent $event) => (string) $event->getId(),
                     $usageEvents
                 );
 
@@ -77,7 +76,7 @@ final readonly class AssetBillingService
     }
 
     /**
-     * Calculate amount for a specific rate card
+     * Calculate amount for a specific rate card.
      */
     private function calculateRateAmount(
         AssetRateCard $rateCard,
@@ -113,32 +112,32 @@ final readonly class AssetBillingService
     ): Money {
         $interval = $startDate->diff($endDate);
         $months = $interval->m + ($interval->y * 12);
-        
+
         // Calculate partial month
         if ($interval->d > 0) {
             $months += $interval->d / 30; // Approximate
         }
-        
+
         return $rateCard->getRate()->multiply($months);
     }
 
     private function calculateMileageRate(AssetRateCard $rateCard, array $usageEvents): Money
     {
         $totalMiles = 0;
-        
+
         foreach ($usageEvents as $event) {
             if ($event->getUnitOfMeasure() === 'miles' || $event->getUnitOfMeasure() === 'mile') {
                 $totalMiles += $event->getQuantity();
             }
         }
-        
+
         return $rateCard->calculateAmount($totalMiles);
     }
 
     private function calculateHourlyRate(AssetRateCard $rateCard, array $usageEvents): Money
     {
         $totalHours = 0;
-        
+
         foreach ($usageEvents as $event) {
             if ($event->getUnitOfMeasure() === 'hours' || $event->getUnitOfMeasure() === 'hour') {
                 $totalHours += $event->getQuantity();
@@ -146,68 +145,68 @@ final readonly class AssetBillingService
                 $totalHours += $event->getDurationInHours();
             }
         }
-        
+
         return $rateCard->calculateAmount($totalHours);
     }
 
     private function calculateTripRate(AssetRateCard $rateCard, array $usageEvents): Money
     {
         $tripCount = 0;
-        
+
         foreach ($usageEvents as $event) {
             if ($event->getUnitOfMeasure() === 'trips' || $event->getUnitOfMeasure() === 'trip') {
                 $tripCount += $event->getQuantity();
             }
         }
-        
+
         return $rateCard->calculateAmount($tripCount);
     }
 
     private function calculateRevenueShare(AssetRateCard $rateCard, array $usageEvents): Money
     {
         $totalRevenue = 0;
-        
+
         foreach ($usageEvents as $event) {
             $revenue = $event->getMetadataValue('revenue');
             if ($revenue !== null) {
                 $totalRevenue += (float) $revenue;
             }
         }
-        
+
         return $rateCard->calculateAmount($totalRevenue);
     }
 
     private function calculateCostPlus(AssetRateCard $rateCard, array $usageEvents): Money
     {
         $totalCosts = 0;
-        
+
         foreach ($usageEvents as $event) {
             $cost = $event->getMetadataValue('cost');
             if ($cost !== null) {
                 $totalCosts += (float) $cost;
             }
         }
-        
+
         // Apply markup percentage
         $markup = $rateCard->getRate()->getAmount() / 10000; // Rate as percentage
         $totalWithMarkup = $totalCosts * (1 + $markup);
-        
+
         return new Money((int) round($totalWithMarkup * 100), $rateCard->getRate()->getCurrency());
     }
 
     private function calculateTieredRate(AssetRateCard $rateCard, array $usageEvents): Money
     {
         $totalQuantity = 0;
-        
+
         foreach ($usageEvents as $event) {
             $totalQuantity += $event->getQuantity();
         }
-        
+
         return $rateCard->calculateAmount($totalQuantity);
     }
 
     /**
-     * Get detailed calculation information
+     * Get detailed calculation information.
      */
     private function getCalculationDetails(AssetRateCard $rateCard, array $usageEvents): array
     {
@@ -222,7 +221,7 @@ final readonly class AssetBillingService
         switch ($rateCard->getRateType()) {
             case RateType::PER_MILE:
                 $totalMiles = array_sum(array_map(
-                    fn($event) => $event->getUnitOfMeasure() === 'miles' ? $event->getQuantity() : 0,
+                    fn ($event) => $event->getUnitOfMeasure() === 'miles' ? $event->getQuantity() : 0,
                     $usageEvents
                 ));
                 $details['total_miles'] = $totalMiles;
@@ -232,7 +231,7 @@ final readonly class AssetBillingService
 
             case RateType::PER_HOUR:
                 $totalHours = array_sum(array_map(
-                    fn($event) => $event->getDurationInHours() ?? 0,
+                    fn ($event) => $event->getDurationInHours() ?? 0,
                     $usageEvents
                 ));
                 $details['total_hours'] = $totalHours;
@@ -243,7 +242,7 @@ final readonly class AssetBillingService
             case RateType::PER_TRIP:
                 $tripCount = count(array_filter(
                     $usageEvents,
-                    fn($event) => $event->getUnitOfMeasure() === 'trips'
+                    fn ($event) => $event->getUnitOfMeasure() === 'trips'
                 ));
                 $details['trip_count'] = $tripCount;
                 $details['unit'] = 'trips';
@@ -255,34 +254,34 @@ final readonly class AssetBillingService
     }
 
     /**
-     * Validate billing calculation for accuracy
+     * Validate billing calculation for accuracy.
      */
     public function validateBillingCalculation(AssetBillingEvent $billingEvent): array
     {
         $issues = [];
-        
+
         // Check if provision was active during billing period
         if (!$billingEvent->getProvision()->isActiveAt($billingEvent->getBillingPeriodStart())) {
             $issues[] = 'Provision was not active at the start of billing period';
         }
-        
+
         // Check if rate card was active during billing period
         if (!$billingEvent->getRateCard()->isActiveAt($billingEvent->getBillingPeriodStart())) {
             $issues[] = 'Rate card was not active during billing period';
         }
-        
+
         // Check for minimum charge compliance
         $minimumCharge = $billingEvent->getRateCard()->getMinimumCharge();
         if ($minimumCharge && $billingEvent->getCalculatedAmount()->lessThan($minimumCharge)) {
             $issues[] = 'Calculated amount is below minimum charge requirement';
         }
-        
+
         // Check for maximum charge compliance
         $maximumCharge = $billingEvent->getRateCard()->getMaximumCharge();
         if ($maximumCharge && $billingEvent->getCalculatedAmount()->greaterThan($maximumCharge)) {
             $issues[] = 'Calculated amount exceeds maximum charge limit';
         }
-        
+
         return $issues;
     }
 }

@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Nkamuo\AssetBundle\Domain\ValueObject;
 
 /**
- * Usage Type enumeration
- * 
+ * Usage Type enumeration.
+ *
  * Defines different types of asset usage activities
  * for accurate tracking and billing purposes.
  */
@@ -56,68 +56,68 @@ enum UsageType: string
     }
 
     /**
-     * Check if this usage type is billable
+     * Check if this usage type is billable.
      */
     public function isBillable(): bool
     {
         return match($this) {
             self::DRIVING, self::LOADING, self::OPERATING, self::SETUP => true,
-            self::WAITING, self::MAINTENANCE, self::IDLE, self::BREAKDOWN, 
+            self::WAITING, self::MAINTENANCE, self::IDLE, self::BREAKDOWN,
             self::TRAINING, self::INSPECTION => false,
         };
     }
 
     /**
-     * Check if this usage type is productive
+     * Check if this usage type is productive.
      */
     public function isProductive(): bool
     {
         return match($this) {
             self::DRIVING, self::LOADING, self::OPERATING => true,
-            self::WAITING, self::MAINTENANCE, self::IDLE, self::BREAKDOWN, 
+            self::WAITING, self::MAINTENANCE, self::IDLE, self::BREAKDOWN,
             self::SETUP, self::TRAINING, self::INSPECTION => false,
         };
     }
 
     /**
-     * Check if this usage type indicates downtime
+     * Check if this usage type indicates downtime.
      */
     public function isDowntime(): bool
     {
         return match($this) {
             self::MAINTENANCE, self::BREAKDOWN, self::IDLE => true,
-            self::DRIVING, self::LOADING, self::WAITING, self::OPERATING, 
+            self::DRIVING, self::LOADING, self::WAITING, self::OPERATING,
             self::SETUP, self::TRAINING, self::INSPECTION => false,
         };
     }
 
     /**
-     * Check if this usage type requires location tracking
+     * Check if this usage type requires location tracking.
      */
     public function requiresLocationTracking(): bool
     {
         return match($this) {
             self::DRIVING, self::LOADING, self::OPERATING => true,
-            self::WAITING, self::MAINTENANCE, self::IDLE, self::BREAKDOWN, 
+            self::WAITING, self::MAINTENANCE, self::IDLE, self::BREAKDOWN,
             self::SETUP, self::TRAINING, self::INSPECTION => false,
         };
     }
 
     /**
-     * Get default unit of measure for this usage type
+     * Get default unit of measure for this usage type.
      */
     public function getDefaultUnitOfMeasure(): string
     {
         return match($this) {
             self::DRIVING => 'miles',
-            self::LOADING, self::WAITING, self::MAINTENANCE, self::IDLE, 
-            self::OPERATING, self::SETUP, self::BREAKDOWN, self::TRAINING, 
+            self::LOADING, self::WAITING, self::MAINTENANCE, self::IDLE,
+            self::OPERATING, self::SETUP, self::BREAKDOWN, self::TRAINING,
             self::INSPECTION => 'hours',
         };
     }
 
     /**
-     * Get color code for visual representation
+     * Get color code for visual representation.
      */
     public function getColor(): string
     {
@@ -136,7 +136,7 @@ enum UsageType: string
     }
 
     /**
-     * Get usage types suitable for specific asset types
+     * Get usage types suitable for specific asset types.
      */
     public static function getSuitableForAssetType(AssetType $assetType): array
     {
@@ -193,52 +193,52 @@ enum UsageType: string
     }
 
     /**
-     * Get billable usage types
+     * Get billable usage types.
      */
     public static function getBillableTypes(): array
     {
         return array_filter(
             self::cases(),
-            fn(self $type) => $type->isBillable()
+            fn (self $type) => $type->isBillable()
         );
     }
 
     /**
-     * Get productive usage types
+     * Get productive usage types.
      */
     public static function getProductiveTypes(): array
     {
         return array_filter(
             self::cases(),
-            fn(self $type) => $type->isProductive()
+            fn (self $type) => $type->isProductive()
         );
     }
 
     /**
-     * Get downtime usage types
+     * Get downtime usage types.
      */
     public static function getDowntimeTypes(): array
     {
         return array_filter(
             self::cases(),
-            fn(self $type) => $type->isDowntime()
+            fn (self $type) => $type->isDowntime()
         );
     }
 
     /**
-     * Check if this usage type affects asset availability
+     * Check if this usage type affects asset availability.
      */
     public function affectsAvailability(): bool
     {
         return match($this) {
             self::MAINTENANCE, self::BREAKDOWN => true,
-            self::DRIVING, self::LOADING, self::WAITING, self::IDLE, 
+            self::DRIVING, self::LOADING, self::WAITING, self::IDLE,
             self::OPERATING, self::SETUP, self::TRAINING, self::INSPECTION => false,
         };
     }
 
     /**
-     * Get priority level for this usage type (1 = highest, 10 = lowest)
+     * Get priority level for this usage type (1 = highest, 10 = lowest).
      */
     public function getPriority(): int
     {
@@ -257,13 +257,13 @@ enum UsageType: string
     }
 
     /**
-     * Check if usage type can be scheduled in advance
+     * Check if usage type can be scheduled in advance.
      */
     public function canBeScheduled(): bool
     {
         return match($this) {
             self::MAINTENANCE, self::TRAINING, self::INSPECTION => true,
-            self::DRIVING, self::LOADING, self::WAITING, self::IDLE, 
+            self::DRIVING, self::LOADING, self::WAITING, self::IDLE,
             self::OPERATING, self::SETUP, self::BREAKDOWN => false,
         };
     }

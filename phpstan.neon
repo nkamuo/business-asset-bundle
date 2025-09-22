@@ -1,0 +1,17 @@
+parameters:
+    level: 8
+    paths:
+        - src
+    
+    excludePaths:
+        - vendor
+        - var
+        - build
+    
+    checkMissingIterableValueType: false
+    checkGenericClassInNonGenericObjectType: false
+    
+    ignoreErrors:
+        # Ignore missing classes that might not be available in test environment
+        - '#Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeDefinition::#'
+        - '#Parameter \#1 \$node of method Symfony\\Component\\Config\\Definition\\Builder\\ArrayNodeDefinition::children\(\) expects Symfony\\Component\\Config\\Definition\\Builder\\NodeDefinition, Symfony\\Component\\Config\\Definition\\Builder\\ScalarNodeDefinition given\.#'

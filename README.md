@@ -1,25 +1,51 @@
 # NkamuoAssetBundle
 
-A comprehensive Symfony 7.3 bundle for asset management following Clean Architecture principles with CQRS pattern implementation using Ecotone framework and Symfony Messenger.
+[![Latest Stable Version](https://poser.pugx.org/nkamuo/business-asset-bundle/v/stable)](https://packagist.org/packages/nkamuo/business-asset-bundle)
+[![Total Downloads](https://poser.pugx.org/nkamuo/business-asset-bundle/downloads)](https://packagist.org/packages/nkamuo/business-asset-bundle)
+[![License](https://poser.pugx.org/nkamuo/business-asset-bundle/license)](https://packagist.org/packages/nkamuo/business-asset-bundle)
+[![PHP Version Require](https://poser.pugx.org/nkamuo/business-asset-bundle/require/php)](https://packagist.org/packages/nkamuo/business-asset-bundle)
+
+A comprehensive Symfony bundle for asset management in transportation and logistics industries, implementing Clean Architecture principles with CQRS pattern and Ecotone framework integration.
 
 ## Features
 
-- **Clean Architecture**: Domain-driven design with clear separation of concerns
-- **CQRS Pattern**: Command Query Responsibility Segregation using Ecotone framework
-- **Asset Management**: Complete lifecycle management for various asset types
-- **Flexible Billing**: Multi-rate billing system with usage tracking
-- **Partnership Support**: Asset sharing and provisioning between partners
-- **Real-time Events**: Event-driven architecture for asset state changes
+🚛 **Comprehensive Asset Management**
+- Multi-category asset support (vehicles, equipment, infrastructure)
+- Complete lifecycle tracking from acquisition to disposal
+- Rich metadata and specification management
+
+💰 **Advanced Billing & Provisioning**
+- Flexible rate card system (fixed, usage-based, percentage, tiered)
+- Complex provisioning arrangements (owned, leased, rented, subcontracted)
+- Automated billing event generation
+
+📊 **Usage Tracking**
+- Real-time usage event recording
+- Multi-dimensional usage metrics
+- Performance analytics and reporting
+
+🏗️ **Clean Architecture**
+- Domain-driven design implementation
+- CQRS pattern with command/query separation
+- Repository pattern with Doctrine integration
+
+⚡ **Modern Technology Stack**
+- Symfony 7.3+ compatibility
+- PHP 8.2+ requirement
+- Ecotone framework for CQRS
+- Symfony Messenger integration
 
 ## Installation
 
+Install the bundle via Composer:
+
 ```bash
-composer require nkamuo/asset-bundle
+composer require nkamuo/business-asset-bundle
 ```
 
-## Configuration
+### Enable the Bundle
 
-Enable the bundle in your `config/bundles.php`:
+Add the bundle to your `config/bundles.php`:
 
 ```php
 <?php
@@ -30,71 +56,163 @@ return [
 ];
 ```
 
-## Asset Types Supported
+### Configure Database
 
-- **Vehicles**: Trucks, trailers, containers, chassis
-- **Human Resources**: Drivers, operators, technicians
-- **Equipment**: Forklifts, cranes, loading equipment, GPS devices
-- **Infrastructure**: Warehouses, yards, docks, fuel stations
-- **Technology**: Software licenses, tracking devices, communication equipment
+Create and run the database migrations:
 
-## Architecture Overview
+```bash
+php bin/console doctrine:migrations:diff
+php bin/console doctrine:migrations:migrate
+```
 
-### Domain Layer
-- Asset entities and value objects
-- Business rules and invariants
-- Domain events and services
+## Quick Start
 
-### Application Layer
-- Commands and queries (CQRS)
-- Application services
-- Event handlers
-
-### Infrastructure Layer
-- Doctrine ORM repositories
-- Symfony Messenger integration
-- Ecotone framework configuration
-
-## Usage
-
-### Basic Asset Creation
+### 1. Create an Asset
 
 ```php
 use Nkamuo\AssetBundle\Application\Command\CreateAssetCommand;
+use Nkamuo\AssetBundle\Domain\ValueObject\AssetType;
+use Nkamuo\AssetBundle\Domain\ValueObject\AssetCategory;
+use Money\Money;
+use Money\Currency;
+use Symfony\Component\Uid\Ulid;
 
 $command = new CreateAssetCommand(
     assetNumber: 'TRUCK-001',
-    name: 'Ford F-150 Pickup',
+    name: 'Ford F-150 Pickup Truck',
     type: AssetType::VEHICLE,
     category: AssetCategory::TRUCK_TRACTOR,
-    ownerId: $partnerId,
-    specifications: ['engine' => 'V8', 'capacity' => '2000kg']
+    ownerId: new Ulid(), // Partner/Company ID
+    acquisitionCost: new Money(2500000, new Currency('USD')) // $25,000.00
 );
 
 $commandBus->dispatch($command);
 ```
 
-### Asset Provisioning
+### 2. Create Asset Provision
 
 ```php
 use Nkamuo\AssetBundle\Application\Command\CreateAssetProvisionCommand;
+use Nkamuo\AssetBundle\Domain\ValueObject\ProvisionType;
 
 $command = new CreateAssetProvisionCommand(
     assetId: $assetId,
-    providerId: $providerId,
-    recipientId: $recipientId,
+    providerId: new Ulid(),
+    recipientId: new Ulid(),
     type: ProvisionType::LEASED,
-    startDate: new \DateTimeImmutable(),
-    terms: ['monthly_rate' => 2500, 'mileage_rate' => 0.15]
+    startDate: new \DateTimeImmutable('2024-01-01'),
+    endDate: new \DateTimeImmutable('2024-12-31')
 );
 
 $commandBus->dispatch($command);
 ```
 
+### 3. Record Asset Usage
+
+```php
+use Nkamuo\AssetBundle\Application\Command\RecordAssetUsageCommand;
+use Nkamuo\AssetBundle\Domain\ValueObject\UsageType;
+
+$command = new RecordAssetUsageCommand(
+    assetId: $assetId,
+    usageType: UsageType::MILEAGE,
+    quantity: 150, // 150 miles
+    startTime: new \DateTimeImmutable('2024-01-15 08:00:00'),
+    endTime: new \DateTimeImmutable('2024-01-15 17:00:00')
+);
+
+$commandBus->dispatch($command);
+```
+
+## Configuration
+
+### Basic Configuration
+
+```yaml
+# config/packages/nkamuo_asset.yaml
+nkamuo_asset:
+    billing:
+        enabled: true
+        currency: 'USD'
+        billing_cycle: 'monthly'
+        auto_generate_events: true
+    
+    assets:
+        default_status: 'available'
+        enable_depreciation: true
+        depreciation_method: 'straight_line'
+    
+    provisions:
+        auto_activate: false
+        require_approval: true
+        default_terms: []
+    
+    usage_tracking:
+        enabled: true
+        real_time: true
+        batch_size: 100
+```
+
+## Testing
+
+Run the test suite:
+
+```bash
+# Run all tests
+composer test
+
+# Run tests with coverage
+composer test-coverage
+
+# Run specific test suite
+vendor/bin/phpunit tests/Unit/Domain/Entity/
+```
+
+## Code Quality
+
+The bundle includes comprehensive code quality tools:
+
+```bash
+# Check coding standards
+composer cs-check
+
+# Fix coding standards
+composer cs-fix
+
+# Run static analysis
+composer phpstan
+composer psalm
+
+# Run all quality checks
+composer quality
+```
+
+## Requirements
+
+- PHP 8.2 or higher
+- Symfony 7.0 or higher
+- Doctrine ORM 3.0 or higher
+
 ## License
 
-MIT License. See [LICENSE](LICENSE) file for details.
+This bundle is released under the MIT License. See [LICENSE](LICENSE) for details.
 
-## Contributing
+## Changelog
 
-Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details on how to contribute to this project.
+### v0.0.1 (2025-01-20)
+
+**Initial Release**
+
+- ✅ Complete asset management system
+- ✅ CQRS implementation with command handlers
+- ✅ Flexible billing and rate card system
+- ✅ Asset provisioning and lifecycle management
+- ✅ Usage tracking and event recording
+- ✅ Clean Architecture with DDD principles
+- ✅ Comprehensive test suite (25 tests, 101 assertions)
+- ✅ Full Doctrine ORM integration
+- ✅ Symfony 7.3 compatibility
+
+---
+
+Built with ❤️ for the transportation and logistics industry.

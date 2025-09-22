@@ -16,7 +16,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Uid\Ulid;
 
 /**
- * Unit tests for AssetProvision entity
+ * Unit tests for AssetProvision entity.
  */
 class AssetProvisionTest extends TestCase
 {
@@ -59,7 +59,7 @@ class AssetProvisionTest extends TestCase
         // Create a provision that's active for the current time period
         $startDate = new \DateTimeImmutable('2024-01-01');
         $endDate = new \DateTimeImmutable('2025-12-31'); // Ensure it covers current date
-        
+
         $provision = new AssetProvision(
             asset: $this->createTestAsset(),
             providerId: new Ulid(),
@@ -92,7 +92,7 @@ class AssetProvisionTest extends TestCase
         $terms = [
             'payment_terms' => '30 days',
             'maintenance_responsibility' => 'lessor',
-            'insurance_responsibility' => 'lessee'
+            'insurance_responsibility' => 'lessee',
         ];
 
         $provision->updateTerms($terms);
@@ -109,7 +109,7 @@ class AssetProvisionTest extends TestCase
         $metadata = [
             'sales_rep' => 'John Doe',
             'discount_applied' => '10%',
-            'approval_code' => 'APP-123'
+            'approval_code' => 'APP-123',
         ];
 
         $provision->updateMetadata($metadata);

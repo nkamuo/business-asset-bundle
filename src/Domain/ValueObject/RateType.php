@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Nkamuo\AssetBundle\Domain\ValueObject;
 
 /**
- * Rate Type enumeration
- * 
+ * Rate Type enumeration.
+ *
  * Defines different billing rate structures for asset provisioning,
  * supporting various business models from fixed rates to complex
  * usage-based and performance-based billing.
@@ -65,80 +65,80 @@ enum RateType: string
     }
 
     /**
-     * Check if this rate type is usage-based
+     * Check if this rate type is usage-based.
      */
     public function isUsageBased(): bool
     {
         return match($this) {
-            self::PER_MILE, self::PER_HOUR, self::PER_TRIP, 
+            self::PER_MILE, self::PER_HOUR, self::PER_TRIP,
             self::PERCENTAGE_REVENUE, self::TIERED => true,
             self::FIXED_DAILY, self::FIXED_MONTHLY, self::COST_PLUS => false,
         };
     }
 
     /**
-     * Check if this rate type is time-based
+     * Check if this rate type is time-based.
      */
     public function isTimeBased(): bool
     {
         return match($this) {
             self::FIXED_DAILY, self::FIXED_MONTHLY, self::PER_HOUR => true,
-            self::PER_MILE, self::PER_TRIP, self::PERCENTAGE_REVENUE, 
+            self::PER_MILE, self::PER_TRIP, self::PERCENTAGE_REVENUE,
             self::COST_PLUS, self::TIERED => false,
         };
     }
 
     /**
-     * Check if this rate type is distance-based
+     * Check if this rate type is distance-based.
      */
     public function isDistanceBased(): bool
     {
         return match($this) {
             self::PER_MILE => true,
-            self::FIXED_DAILY, self::FIXED_MONTHLY, self::PER_HOUR, 
-            self::PER_TRIP, self::PERCENTAGE_REVENUE, self::COST_PLUS, 
+            self::FIXED_DAILY, self::FIXED_MONTHLY, self::PER_HOUR,
+            self::PER_TRIP, self::PERCENTAGE_REVENUE, self::COST_PLUS,
             self::TIERED => false,
         };
     }
 
     /**
-     * Check if this rate type is performance-based
+     * Check if this rate type is performance-based.
      */
     public function isPerformanceBased(): bool
     {
         return match($this) {
             self::PERCENTAGE_REVENUE, self::PER_TRIP => true,
-            self::FIXED_DAILY, self::FIXED_MONTHLY, self::PER_MILE, 
+            self::FIXED_DAILY, self::FIXED_MONTHLY, self::PER_MILE,
             self::PER_HOUR, self::COST_PLUS, self::TIERED => false,
         };
     }
 
     /**
-     * Check if this rate type requires minimum charge protection
+     * Check if this rate type requires minimum charge protection.
      */
     public function requiresMinimumCharge(): bool
     {
         return match($this) {
-            self::PER_MILE, self::PER_HOUR, self::PER_TRIP, 
+            self::PER_MILE, self::PER_HOUR, self::PER_TRIP,
             self::PERCENTAGE_REVENUE, self::TIERED => true,
             self::FIXED_DAILY, self::FIXED_MONTHLY, self::COST_PLUS => false,
         };
     }
 
     /**
-     * Check if this rate type supports maximum charge limits
+     * Check if this rate type supports maximum charge limits.
      */
     public function supportsMaximumCharge(): bool
     {
         return match($this) {
-            self::PER_MILE, self::PER_HOUR, self::PERCENTAGE_REVENUE, 
+            self::PER_MILE, self::PER_HOUR, self::PERCENTAGE_REVENUE,
             self::COST_PLUS, self::TIERED => true,
             self::FIXED_DAILY, self::FIXED_MONTHLY, self::PER_TRIP => false,
         };
     }
 
     /**
-     * Get rate types suitable for specific asset types
+     * Get rate types suitable for specific asset types.
      */
     public static function getSuitableForAssetType(AssetType $assetType): array
     {
@@ -184,7 +184,7 @@ enum RateType: string
     }
 
     /**
-     * Get billing frequency recommendation for this rate type
+     * Get billing frequency recommendation for this rate type.
      */
     public function getRecommendedBillingFrequency(): string
     {
@@ -196,54 +196,54 @@ enum RateType: string
     }
 
     /**
-     * Check if this rate type requires usage tracking
+     * Check if this rate type requires usage tracking.
      */
     public function requiresUsageTracking(): bool
     {
         return match($this) {
-            self::PER_MILE, self::PER_HOUR, self::PER_TRIP, 
+            self::PER_MILE, self::PER_HOUR, self::PER_TRIP,
             self::PERCENTAGE_REVENUE, self::TIERED => true,
             self::FIXED_DAILY, self::FIXED_MONTHLY, self::COST_PLUS => false,
         };
     }
 
     /**
-     * Get example rate structure for documentation
+     * Get example rate structure for documentation.
      */
     public function getExampleStructure(): array
     {
         return match($this) {
             self::FIXED_DAILY => [
                 'rate' => '$150.00 per day',
-                'example' => '5 days × $150 = $750.00'
+                'example' => '5 days × $150 = $750.00',
             ],
             self::FIXED_MONTHLY => [
                 'rate' => '$2,500.00 per month',
-                'example' => '1 month × $2,500 = $2,500.00'
+                'example' => '1 month × $2,500 = $2,500.00',
             ],
             self::PER_MILE => [
                 'rate' => '$0.65 per mile',
-                'example' => '1,000 miles × $0.65 = $650.00'
+                'example' => '1,000 miles × $0.65 = $650.00',
             ],
             self::PER_HOUR => [
                 'rate' => '$35.00 per hour',
-                'example' => '40 hours × $35 = $1,400.00'
+                'example' => '40 hours × $35 = $1,400.00',
             ],
             self::PER_TRIP => [
                 'rate' => '$250.00 per trip',
-                'example' => '8 trips × $250 = $2,000.00'
+                'example' => '8 trips × $250 = $2,000.00',
             ],
             self::PERCENTAGE_REVENUE => [
                 'rate' => '15% of revenue',
-                'example' => '$10,000 revenue × 15% = $1,500.00'
+                'example' => '$10,000 revenue × 15% = $1,500.00',
             ],
             self::COST_PLUS => [
                 'rate' => 'Cost + 20% markup',
-                'example' => '$800 cost + 20% = $960.00'
+                'example' => '$800 cost + 20% = $960.00',
             ],
             self::TIERED => [
                 'rate' => 'Tier 1: $0.70/mile (0-500), Tier 2: $0.60/mile (501+)',
-                'example' => '800 miles: (500×$0.70) + (300×$0.60) = $530.00'
+                'example' => '800 miles: (500×$0.70) + (300×$0.60) = $530.00',
             ],
         };
     }

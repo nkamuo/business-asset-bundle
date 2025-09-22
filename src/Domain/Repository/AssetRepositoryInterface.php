@@ -10,7 +10,7 @@ use Nkamuo\AssetBundle\Domain\ValueObject\AssetType;
 use Symfony\Component\Uid\Ulid;
 
 /**
- * Repository interface for Asset entities
+ * Repository interface for Asset entities.
  */
 interface AssetRepositoryInterface
 {
@@ -58,8 +58,8 @@ interface AssetRepositoryInterface
     public function findAll(): array;
 
     /**
-     * Find assets with filters
-     * 
+     * Find assets with filters.
+     *
      * @return Asset[]
      */
     public function findWithFilters(
@@ -73,7 +73,7 @@ interface AssetRepositoryInterface
     ): array;
 
     /**
-     * Count assets with filters
+     * Count assets with filters.
      */
     public function countWithFilters(
         ?AssetType $type = null,

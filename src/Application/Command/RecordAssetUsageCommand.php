@@ -8,7 +8,7 @@ use Nkamuo\AssetBundle\Domain\ValueObject\UsageType;
 use Symfony\Component\Uid\Ulid;
 
 /**
- * Command to record asset usage event
+ * Command to record asset usage event.
  */
 final readonly class RecordAssetUsageCommand
 {

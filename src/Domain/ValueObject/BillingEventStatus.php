@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Nkamuo\AssetBundle\Domain\ValueObject;
 
 /**
- * Billing Event Status enumeration
- * 
+ * Billing Event Status enumeration.
+ *
  * Represents the current status of a billing event
  * in the billing and settlement workflow.
  */
@@ -52,7 +52,7 @@ enum BillingEventStatus: string
     }
 
     /**
-     * Get valid status transitions from current status
+     * Get valid status transitions from current status.
      */
     public function getValidTransitions(): array
     {
@@ -66,7 +66,7 @@ enum BillingEventStatus: string
     }
 
     /**
-     * Check if transition to another status is valid
+     * Check if transition to another status is valid.
      */
     public function canTransitionTo(BillingEventStatus $newStatus): bool
     {
@@ -74,7 +74,7 @@ enum BillingEventStatus: string
     }
 
     /**
-     * Check if billing event can be modified in this status
+     * Check if billing event can be modified in this status.
      */
     public function allowsModification(): bool
     {
@@ -85,7 +85,7 @@ enum BillingEventStatus: string
     }
 
     /**
-     * Check if billing event contributes to revenue in this status
+     * Check if billing event contributes to revenue in this status.
      */
     public function contributesToRevenue(): bool
     {
@@ -96,7 +96,7 @@ enum BillingEventStatus: string
     }
 
     /**
-     * Check if billing event requires approval in this status
+     * Check if billing event requires approval in this status.
      */
     public function requiresApproval(): bool
     {
@@ -107,7 +107,7 @@ enum BillingEventStatus: string
     }
 
     /**
-     * Check if billing event can be included in settlement
+     * Check if billing event can be included in settlement.
      */
     public function canBeSettled(): bool
     {
@@ -118,7 +118,7 @@ enum BillingEventStatus: string
     }
 
     /**
-     * Get statuses that are considered final
+     * Get statuses that are considered final.
      */
     public static function getFinalStatuses(): array
     {
@@ -126,7 +126,7 @@ enum BillingEventStatus: string
     }
 
     /**
-     * Get statuses that are considered active (not final)
+     * Get statuses that are considered active (not final).
      */
     public static function getActiveStatuses(): array
     {
@@ -139,7 +139,7 @@ enum BillingEventStatus: string
     }
 
     /**
-     * Get statuses that indicate pending settlement
+     * Get statuses that indicate pending settlement.
      */
     public static function getPendingSettlementStatuses(): array
     {
@@ -150,7 +150,7 @@ enum BillingEventStatus: string
     }
 
     /**
-     * Get statuses that indicate completed billing
+     * Get statuses that indicate completed billing.
      */
     public static function getCompletedStatuses(): array
     {
@@ -161,7 +161,7 @@ enum BillingEventStatus: string
     }
 
     /**
-     * Check if this is a final status
+     * Check if this is a final status.
      */
     public function isFinal(): bool
     {
@@ -169,7 +169,7 @@ enum BillingEventStatus: string
     }
 
     /**
-     * Check if this is an active status
+     * Check if this is an active status.
      */
     public function isActive(): bool
     {
@@ -177,7 +177,7 @@ enum BillingEventStatus: string
     }
 
     /**
-     * Check if this status indicates pending settlement
+     * Check if this status indicates pending settlement.
      */
     public function isPendingSettlement(): bool
     {
@@ -185,7 +185,7 @@ enum BillingEventStatus: string
     }
 
     /**
-     * Check if this status indicates completed billing
+     * Check if this status indicates completed billing.
      */
     public function isCompleted(): bool
     {
@@ -193,7 +193,7 @@ enum BillingEventStatus: string
     }
 
     /**
-     * Get the next recommended status
+     * Get the next recommended status.
      */
     public function getNextRecommendedStatus(): ?BillingEventStatus
     {
@@ -207,7 +207,7 @@ enum BillingEventStatus: string
     }
 
     /**
-     * Get action label for transitioning to next status
+     * Get action label for transitioning to next status.
      */
     public function getNextActionLabel(): ?string
     {
@@ -221,7 +221,7 @@ enum BillingEventStatus: string
     }
 
     /**
-     * Check if status requires manual intervention
+     * Check if status requires manual intervention.
      */
     public function requiresManualIntervention(): bool
     {
@@ -232,7 +232,7 @@ enum BillingEventStatus: string
     }
 
     /**
-     * Get billing workflow priority (1 = highest, 10 = lowest)
+     * Get billing workflow priority (1 = highest, 10 = lowest).
      */
     public function getWorkflowPriority(): int
     {

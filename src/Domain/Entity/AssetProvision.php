@@ -14,7 +14,7 @@ use Symfony\Component\Uid\Ulid;
 /**
  * Asset Provision entity representing contracts and agreements
  * for asset usage between partners.
- * 
+ *
  * Handles the relationship between asset providers and recipients,
  * including terms, rates, and billing arrangements.
  */
@@ -309,7 +309,7 @@ class AssetProvision
         $at = $at ?? new \DateTimeImmutable();
 
         return $this->rateCards->filter(
-            fn(AssetRateCard $rateCard) => $rateCard->isActiveAt($at)
+            fn (AssetRateCard $rateCard) => $rateCard->isActiveAt($at)
         )->toArray();
     }
 

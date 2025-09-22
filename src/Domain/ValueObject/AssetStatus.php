@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Nkamuo\AssetBundle\Domain\ValueObject;
 
 /**
- * Asset Status enumeration
- * 
+ * Asset Status enumeration.
+ *
  * Represents the current operational status of an asset,
  * determining its availability for assignment and billing.
  */
@@ -52,7 +52,7 @@ enum AssetStatus: string
     }
 
     /**
-     * Check if asset can be assigned in this status
+     * Check if asset can be assigned in this status.
      */
     public function canBeAssigned(): bool
     {
@@ -63,7 +63,7 @@ enum AssetStatus: string
     }
 
     /**
-     * Check if asset generates billing in this status
+     * Check if asset generates billing in this status.
      */
     public function generatesBilling(): bool
     {
@@ -74,7 +74,7 @@ enum AssetStatus: string
     }
 
     /**
-     * Check if asset requires maintenance tracking in this status
+     * Check if asset requires maintenance tracking in this status.
      */
     public function requiresMaintenanceTracking(): bool
     {
@@ -85,7 +85,7 @@ enum AssetStatus: string
     }
 
     /**
-     * Get valid status transitions from current status
+     * Get valid status transitions from current status.
      */
     public function getValidTransitions(): array
     {
@@ -99,7 +99,7 @@ enum AssetStatus: string
     }
 
     /**
-     * Check if transition to another status is valid
+     * Check if transition to another status is valid.
      */
     public function canTransitionTo(AssetStatus $newStatus): bool
     {
@@ -107,7 +107,7 @@ enum AssetStatus: string
     }
 
     /**
-     * Get statuses that are considered active (not retired)
+     * Get statuses that are considered active (not retired).
      */
     public static function getActiveStatuses(): array
     {
@@ -120,7 +120,7 @@ enum AssetStatus: string
     }
 
     /**
-     * Get statuses that indicate asset is operational
+     * Get statuses that indicate asset is operational.
      */
     public static function getOperationalStatuses(): array
     {
@@ -131,7 +131,7 @@ enum AssetStatus: string
     }
 
     /**
-     * Check if this is an active status
+     * Check if this is an active status.
      */
     public function isActive(): bool
     {
@@ -139,7 +139,7 @@ enum AssetStatus: string
     }
 
     /**
-     * Check if this is an operational status
+     * Check if this is an operational status.
      */
     public function isOperational(): bool
     {

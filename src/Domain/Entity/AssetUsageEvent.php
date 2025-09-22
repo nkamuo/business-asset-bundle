@@ -9,8 +9,8 @@ use Nkamuo\AssetBundle\Domain\ValueObject\UsageType;
 use Symfony\Component\Uid\Ulid;
 
 /**
- * Asset Usage Event entity tracking asset utilization
- * 
+ * Asset Usage Event entity tracking asset utilization.
+ *
  * Records specific usage events for assets enabling
  * accurate billing calculation and performance analysis.
  */
@@ -187,9 +187,9 @@ class AssetUsageEvent
             return null;
         }
 
-        return ($duration->days * 24 * 60 * 60) + 
-               ($duration->h * 60 * 60) + 
-               ($duration->i * 60) + 
+        return ($duration->days * 24 * 60 * 60) +
+               ($duration->h * 60 * 60) +
+               ($duration->i * 60) +
                $duration->s;
     }
 

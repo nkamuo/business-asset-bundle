@@ -9,7 +9,7 @@ use Nkamuo\AssetBundle\Domain\ValueObject\BillingEventStatus;
 use Symfony\Component\Uid\Ulid;
 
 /**
- * Repository interface for AssetBillingEvent entities
+ * Repository interface for AssetBillingEvent entities.
  */
 interface AssetBillingEventRepositoryInterface
 {
@@ -68,8 +68,8 @@ interface AssetBillingEventRepositoryInterface
     public function findAll(): array;
 
     /**
-     * Find billing events with filters
-     * 
+     * Find billing events with filters.
+     *
      * @return AssetBillingEvent[]
      */
     public function findWithFilters(
@@ -84,7 +84,7 @@ interface AssetBillingEventRepositoryInterface
     ): array;
 
     /**
-     * Calculate total billing amount for a period
+     * Calculate total billing amount for a period.
      */
     public function calculateTotalAmountForPeriod(
         \DateTimeImmutable $startDate,
@@ -93,7 +93,7 @@ interface AssetBillingEventRepositoryInterface
     ): int; // Amount in cents
 
     /**
-     * Get billing statistics for an asset
+     * Get billing statistics for an asset.
      */
     public function getBillingStatistics(
         Ulid $assetId,

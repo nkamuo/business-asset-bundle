@@ -7,8 +7,8 @@ namespace Nkamuo\AssetBundle;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
- * NkamuoAssetBundle - A comprehensive Symfony bundle for asset management
- * 
+ * NkamuoAssetBundle - A comprehensive Symfony bundle for asset management.
+ *
  * Features:
  * - Clean Architecture with CQRS pattern
  * - Ecotone framework integration

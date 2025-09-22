@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Nkamuo\AssetBundle\Domain\ValueObject;
 
 /**
- * Asset Type enumeration
- * 
+ * Asset Type enumeration.
+ *
  * Defines the broad categories of assets that can be managed
  * within the system, covering physical assets, human resources,
  * and technology components.
@@ -48,7 +48,7 @@ enum AssetType: string
     }
 
     /**
-     * Get asset types that are typically mobile/movable
+     * Get asset types that are typically mobile/movable.
      */
     public static function getMobileTypes(): array
     {
@@ -62,7 +62,7 @@ enum AssetType: string
     }
 
     /**
-     * Get asset types that are typically stationary
+     * Get asset types that are typically stationary.
      */
     public static function getStationaryTypes(): array
     {
@@ -73,7 +73,7 @@ enum AssetType: string
     }
 
     /**
-     * Check if this asset type is typically mobile
+     * Check if this asset type is typically mobile.
      */
     public function isMobile(): bool
     {
@@ -81,7 +81,7 @@ enum AssetType: string
     }
 
     /**
-     * Check if this asset type is typically stationary
+     * Check if this asset type is typically stationary.
      */
     public function isStationary(): bool
     {

@@ -14,7 +14,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Uid\Ulid;
 
 /**
- * Unit tests for Asset entity
+ * Unit tests for Asset entity.
  */
 class AssetTest extends TestCase
 {
@@ -83,7 +83,7 @@ class AssetTest extends TestCase
         $specifications = [
             'engine' => 'V8',
             'capacity' => '2000kg',
-            'fuel_type' => 'diesel'
+            'fuel_type' => 'diesel',
         ];
 
         $asset->updateSpecifications($specifications);
@@ -99,7 +99,7 @@ class AssetTest extends TestCase
 
         $identifiers = [
             'vin' => '1HGBH41JXMN109186',
-            'license_plate' => 'ABC-1234'
+            'license_plate' => 'ABC-1234',
         ];
 
         $asset->updateIdentifiers($identifiers);
@@ -116,7 +116,7 @@ class AssetTest extends TestCase
         $metadata = [
             'location' => 'Warehouse A',
             'last_service' => '2024-01-15',
-            'notes' => 'Excellent condition'
+            'notes' => 'Excellent condition',
         ];
 
         $asset->updateMetadata($metadata);

@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Nkamuo\AssetBundle\Application\Command;
 
-use Nkamuo\AssetBundle\Domain\ValueObject\RateType;
 use Money\Money;
+use Nkamuo\AssetBundle\Domain\ValueObject\RateType;
 use Symfony\Component\Uid\Ulid;
 
 /**
- * Command to create a new asset rate card
+ * Command to create a new asset rate card.
  */
 final readonly class CreateAssetRateCardCommand
 {
