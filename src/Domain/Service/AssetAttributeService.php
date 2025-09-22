@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Nkamuo\AssetBundle\Domain\Service;
 
 use Nkamuo\AssetBundle\Domain\Entity\Asset;
+use Nkamuo\AssetBundle\Domain\Entity\AssetAttribute;
 use Nkamuo\AssetBundle\Domain\Entity\AssetAttributeDefinition;
 use Nkamuo\AssetBundle\Domain\Repository\AssetAttributeDefinitionRepositoryInterface;
 use Nkamuo\AssetBundle\Domain\Repository\AssetAttributeRepositoryInterface;
@@ -257,5 +258,66 @@ class AssetAttributeService
                 default => throw new \InvalidArgumentException("Unknown property: {$property}"),
             };
         }
+    }
+
+    /**
+     * Bulk update attributes for multiple assets
+     *
+     * @param Asset[] $assets
+     * @param array{attributeKey: string, value: mixed} $updateData
+     * @return AssetAttribute[]
+     */
+    public function bulkUpdateAttributesForAssets(array $assets, array $updateData): array
+    {
+        $definition = $this->definitionRepository->findByKey($updateData['attributeKey']);
+        if (!$definition) {
+            throw new \InvalidArgumentException("Attribute definition not found with key: {$updateData['attributeKey']}");
+        }
+
+        $results = [];
+        foreach ($assets as $asset) {
+            if (!$definition->appliesTo($asset)) {
+                continue; // Skip assets that don't match the attribute definition
+            }
+
+            try {
+                $asset->setCustomAttribute($definition, $updateData['value']);
+                $attribute = $asset->getCustomAttribute($definition->getAttributeKey());
+                if ($attribute) {
+                    $results[] = $attribute;
+                }
+            } catch (\Exception $e) {
+                // Skip assets that can't be updated
+                continue;
+            }
+        }
+
+        return $results;
+    }
+
+    /**
+     * Get statistics for an attribute definition
+     *
+     * @return array{total_count: int, unique_values: int, value_distribution: array<string, int>}
+     */
+    public function getAttributeStatistics(AssetAttributeDefinition $definition): array
+    {
+        $attributes = $this->attributeRepository->findByDefinition($definition);
+        
+        $totalCount = count($attributes);
+        $valueDistribution = [];
+        
+        foreach ($attributes as $attribute) {
+            $value = (string) $attribute->getValue();
+            $valueDistribution[$value] = ($valueDistribution[$value] ?? 0) + 1;
+        }
+        
+        $uniqueValues = count($valueDistribution);
+        
+        return [
+            'total_count' => $totalCount,
+            'unique_values' => $uniqueValues,
+            'value_distribution' => $valueDistribution,
+        ];
     }
 }
