@@ -47,3 +47,7 @@ composer.lock
 # Temporary files
 *.tmp
 *.temp
+
+
+/.claude
+/.claude/prompts

@@ -85,6 +85,12 @@ class Asset
     #[ORM\OneToMany(mappedBy: 'asset', targetEntity: AssetUsageEvent::class)]
     private Collection $usageEvents;
 
+    /**
+     * @var Collection<int, AssetAttribute>
+     */
+    #[ORM\OneToMany(mappedBy: 'asset', targetEntity: AssetAttribute::class, cascade: ['persist', 'remove'])]
+    private Collection $customAttributes;
+
     public function __construct(
         string $assetNumber,
         string $name,
@@ -116,6 +122,7 @@ class Asset
         $this->provisions = new ArrayCollection();
         $this->billingEvents = new ArrayCollection();
         $this->usageEvents = new ArrayCollection();
+        $this->customAttributes = new ArrayCollection();
     }
 
     // Getters
@@ -290,5 +297,90 @@ class Asset
         }
 
         return null;
+    }
+
+    /**
+     * @return Collection<int, AssetAttribute>
+     */
+    public function getCustomAttributes(): Collection
+    {
+        return $this->customAttributes;
+    }
+
+    /**
+     * Get custom attribute by key.
+     */
+    public function getCustomAttribute(string $key): ?AssetAttribute
+    {
+        foreach ($this->customAttributes as $attribute) {
+            if ($attribute->getAttributeKey() === $key) {
+                return $attribute;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Get custom attribute value by key.
+     */
+    public function getCustomAttributeValue(string $key): mixed
+    {
+        $attribute = $this->getCustomAttribute($key);
+        return $attribute?->getValue();
+    }
+
+    /**
+     * Set custom attribute value.
+     */
+    public function setCustomAttribute(AssetAttributeDefinition $definition, mixed $value): self
+    {
+        // Check if attribute already exists
+        $existingAttribute = $this->getCustomAttribute($definition->getAttributeKey());
+        
+        if ($existingAttribute) {
+            $existingAttribute->setValue($value);
+        } else {
+            $newAttribute = new AssetAttribute($this, $definition, $value);
+            $this->customAttributes->add($newAttribute);
+        }
+
+        $this->updatedAt = new \DateTimeImmutable();
+        return $this;
+    }
+
+    /**
+     * Remove custom attribute by key.
+     */
+    public function removeCustomAttribute(string $key): self
+    {
+        $attribute = $this->getCustomAttribute($key);
+        if ($attribute) {
+            $this->customAttributes->removeElement($attribute);
+            $this->updatedAt = new \DateTimeImmutable();
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get all custom attributes as key-value array.
+     */
+    public function getCustomAttributesArray(): array
+    {
+        $attributes = [];
+        foreach ($this->customAttributes as $attribute) {
+            $attributes[$attribute->getAttributeKey()] = $attribute->getValue();
+        }
+
+        return $attributes;
+    }
+
+    /**
+     * Check if asset has a specific custom attribute.
+     */
+    public function hasCustomAttribute(string $key): bool
+    {
+        return $this->getCustomAttribute($key) !== null;
     }
 }
